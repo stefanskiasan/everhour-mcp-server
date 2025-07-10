@@ -26,6 +26,8 @@ import { timerTools } from './tools/timers.js';
 import { clientTools } from './tools/clients.js';
 import { sectionTools } from './tools/sections.js';
 import { userTools } from './tools/users.js';
+import { readonlyMode } from './utils/readonly.js';
+import { MCPToolDefinition } from './types/everhour.js';
 
 // Configuration
 interface Config {
@@ -71,7 +73,7 @@ try {
 }
 
 // Combine all tools
-const allTools = {
+const allTools: Record<string, MCPToolDefinition> = {
   ...projectTools,
   ...taskTools,
   ...taskExtensionTools,
@@ -81,6 +83,9 @@ const allTools = {
   ...sectionTools,
   ...userTools,
 };
+
+// Log readonly mode status
+readonlyMode.logStatus(allTools);
 
 // List tools handler
 server.setRequestHandler(ListToolsRequestSchema, async () => {
@@ -101,6 +106,20 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const tool = allTools[name as keyof typeof allTools];
     if (!tool) {
       throw new McpError(ErrorCode.MethodNotFound, `Tool "${name}" not found`);
+    }
+    
+    // Check readonly mode restrictions
+    if (!readonlyMode.isToolAllowed(tool)) {
+      const errorMessage = readonlyMode.createBlockedToolError(name, tool);
+      return {
+        content: [
+          {
+            type: 'text',
+            text: errorMessage,
+          },
+        ],
+        isError: true,
+      };
     }
     
     const result = await tool.handler(apiClient, args || {});

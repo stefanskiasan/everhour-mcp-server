@@ -4,7 +4,8 @@ import {
   EverHourProject, 
   CreateProjectParams, 
   UpdateProjectParams, 
-  ListParams 
+  ListParams,
+  MCPTools
 } from '../types/everhour.js';
 
 // Zod schemas for input validation
@@ -46,10 +47,13 @@ const DeleteProjectSchema = z.object({
   id: z.string(),
 });
 
-export const projectTools = {
+export const projectTools: MCPTools = {
   everhour_list_projects: {
     name: 'everhour_list_projects',
     description: 'List all projects from Everhour. Supports filtering by status, client, and search query.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['projects'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -120,6 +124,9 @@ export const projectTools = {
   everhour_get_project: {
     name: 'everhour_get_project',
     description: 'Get details of a specific project by ID.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['projects'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -173,6 +180,9 @@ export const projectTools = {
   everhour_create_project: {
     name: 'everhour_create_project',
     description: 'Create a new project in Everhour.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['projects'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -254,6 +264,9 @@ export const projectTools = {
   everhour_update_project: {
     name: 'everhour_update_project',
     description: 'Update an existing project in Everhour.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['projects'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -335,6 +348,9 @@ export const projectTools = {
   everhour_delete_project: {
     name: 'everhour_delete_project',
     description: 'Delete a project from Everhour. This action cannot be undone.',
+    readonly: false,
+    operationType: 'delete',
+    affectedResources: ['projects'],
     inputSchema: {
       type: 'object',
       properties: {

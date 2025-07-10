@@ -248,6 +248,82 @@ The server supports flexible time input formats:
 |----------|----------|---------|-------------|
 | `EVERHOUR_API_KEY` | ✅ Yes | - | Your Everhour API key |
 | `EVERHOUR_API_BASE_URL` | ❌ No | `https://api.everhour.com` | API base URL |
+| `EVERHOUR_READONLY_MODE` | ❌ No | `false` | Enable readonly mode for safety |
+
+## 🔒 Readonly Mode
+
+**Readonly mode** provides an additional security layer by blocking all write and delete operations, allowing only safe read operations.
+
+### When to Use Readonly Mode
+
+- **Production environments** where data integrity is critical
+- **Reporting and analytics** use cases
+- **Shared or untrusted environments**
+- **Testing and development** with live data
+- **Compliance requirements** for read-only access
+
+### Enabling Readonly Mode
+
+```bash
+# Via environment variable
+EVERHOUR_READONLY_MODE=true npx @everhour/mcp-server
+
+# Or export for session
+export EVERHOUR_READONLY_MODE=true
+npx @everhour/mcp-server
+```
+
+### Claude Desktop Readonly Configuration
+
+```json
+{
+  "mcpServers": {
+    "everhour-readonly": {
+      "command": "npx",
+      "args": ["@everhour/mcp-server"],
+      "env": {
+        "EVERHOUR_API_KEY": "your_api_key_here",
+        "EVERHOUR_READONLY_MODE": "true"
+      }
+    }
+  }
+}
+```
+
+### What's Blocked in Readonly Mode
+
+- ❌ **Creating**: Projects, tasks, clients, sections, time records
+- ❌ **Updating**: Any modifications to existing data
+- ❌ **Deleting**: Removal of any resources
+- ❌ **Timer Control**: Starting/stopping timers
+- ❌ **Time Logging**: Adding or modifying time entries
+
+### What's Allowed in Readonly Mode
+
+- ✅ **Listing**: All list operations (`everhour_list_*`)
+- ✅ **Reading**: All get operations (`everhour_get_*`)
+- ✅ **Status Checks**: Timer status, user information
+- ✅ **Searching**: Project, task, and client searches
+- ✅ **Reports**: Time record queries and analytics
+
+### Readonly Mode Status
+
+When the server starts, it will log the current mode:
+
+```
+🔒 EVERHOUR MCP SERVER - READONLY MODE ACTIVE
+   Available tools: 19/37
+   Blocked tools: 18 (write/delete operations)
+   To enable full mode: Set EVERHOUR_READONLY_MODE=false
+```
+
+Or in full mode:
+
+```
+🔓 EVERHOUR MCP SERVER - FULL MODE ACTIVE
+   All 37 tools available
+   To enable readonly mode: Set EVERHOUR_READONLY_MODE=true
+```
 
 ## 📖 Documentation
 

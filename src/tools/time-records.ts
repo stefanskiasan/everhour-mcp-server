@@ -4,7 +4,8 @@ import {
   EverHourTimeRecord, 
   CreateTimeRecordParams, 
   UpdateTimeRecordParams, 
-  ListParams 
+  ListParams,
+  MCPTools 
 } from '../types/everhour.js';
 
 // Zod schemas for input validation
@@ -59,10 +60,13 @@ const DeleteTimeRecordSchema = z.object({
   id: z.string(),
 });
 
-export const timeRecordTools = {
+export const timeRecordTools: MCPTools = {
   everhour_list_time_records: {
     name: 'everhour_list_time_records',
     description: 'List time records from Everhour. Supports filtering by project, assignee, and date range.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['time'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -139,6 +143,9 @@ export const timeRecordTools = {
   everhour_get_time_record: {
     name: 'everhour_get_time_record',
     description: 'Get details of a specific time record by ID.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['time'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -193,6 +200,9 @@ export const timeRecordTools = {
   everhour_create_time_record: {
     name: 'everhour_create_time_record',
     description: 'Create a new time record in Everhour. Time can be specified in seconds or human-readable format (e.g., "1h 30m", "90m", "5400s").',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['time'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -274,6 +284,9 @@ export const timeRecordTools = {
   everhour_update_time_record: {
     name: 'everhour_update_time_record',
     description: 'Update an existing time record in Everhour. Time can be specified in seconds or human-readable format.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['time'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -359,6 +372,9 @@ export const timeRecordTools = {
   everhour_delete_time_record: {
     name: 'everhour_delete_time_record',
     description: 'Delete a time record from Everhour. This action cannot be undone.',
+    readonly: false,
+    operationType: 'delete',
+    affectedResources: ['time'],
     inputSchema: {
       type: 'object',
       properties: {

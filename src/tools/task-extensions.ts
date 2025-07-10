@@ -5,7 +5,8 @@ import {
   EverHourTimeRecord,
   CreateTimeRecordParams,
   UpdateTimeRecordParams,
-  ListParams 
+  ListParams,
+  MCPTools 
 } from '../types/everhour.js';
 
 // Zod schemas for input validation
@@ -56,10 +57,13 @@ const DeleteTaskTimeSchema = z.object({
   id: z.string(),
 });
 
-export const taskExtensionTools = {
+export const taskExtensionTools: MCPTools = {
   everhour_get_tasks_for_project: {
     name: 'everhour_get_tasks_for_project',
     description: 'Get all tasks for a specific project using the /tasks/for_project/{project_id} endpoint.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['tasks'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -140,6 +144,9 @@ export const taskExtensionTools = {
   everhour_update_task_estimate: {
     name: 'everhour_update_task_estimate',
     description: 'Update the estimate for a specific task.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['tasks'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -196,6 +203,9 @@ export const taskExtensionTools = {
   everhour_delete_task_estimate: {
     name: 'everhour_delete_task_estimate',
     description: 'Delete the estimate from a specific task.',
+    readonly: false,
+    operationType: 'delete',
+    affectedResources: ['tasks'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -240,6 +250,9 @@ export const taskExtensionTools = {
   everhour_add_time_to_task: {
     name: 'everhour_add_time_to_task',
     description: 'Add time directly to a specific task using the /tasks/{id}/time endpoint.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['tasks', 'time'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -318,6 +331,9 @@ export const taskExtensionTools = {
   everhour_update_task_time: {
     name: 'everhour_update_task_time',
     description: 'Update time for a specific task using the /tasks/{id}/time endpoint.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['tasks', 'time'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -395,6 +411,9 @@ export const taskExtensionTools = {
   everhour_delete_task_time: {
     name: 'everhour_delete_task_time',
     description: 'Delete time from a specific task using the /tasks/{id}/time endpoint.',
+    readonly: false,
+    operationType: 'delete',
+    affectedResources: ['tasks', 'time'],
     inputSchema: {
       type: 'object',
       properties: {

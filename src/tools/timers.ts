@@ -3,7 +3,8 @@ import { EverHourApiClient } from '../api/everhour-client.js';
 import { 
   EverHourTimer, 
   TimerStartParams, 
-  ListParams 
+  ListParams,
+  MCPTools 
 } from '../types/everhour.js';
 
 // Zod schemas for input validation
@@ -33,10 +34,13 @@ const StartTimerForTaskSchema = z.object({
   comment: z.string().optional(),
 });
 
-export const timerTools = {
+export const timerTools: MCPTools = {
   everhour_get_current_timer: {
     name: 'everhour_get_current_timer',
     description: 'Get the currently running timer, if any.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['timers'],
     inputSchema: {
       type: 'object',
       properties: {},
@@ -97,6 +101,9 @@ export const timerTools = {
   everhour_start_timer: {
     name: 'everhour_start_timer',
     description: 'Start a new timer in Everhour. Can be associated with a task or project.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['timers'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -184,6 +191,9 @@ export const timerTools = {
   everhour_stop_timer: {
     name: 'everhour_stop_timer',
     description: 'Stop the currently running timer.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['timers'],
     inputSchema: {
       type: 'object',
       properties: {},
@@ -248,6 +258,9 @@ export const timerTools = {
   everhour_list_timers: {
     name: 'everhour_list_timers',
     description: 'List timer history from Everhour. Supports filtering by project, assignee, and date range.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['timers'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -323,6 +336,9 @@ export const timerTools = {
   everhour_timer_status: {
     name: 'everhour_timer_status',
     description: 'Get a summary of timer status and activity.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['timers'],
     inputSchema: {
       type: 'object',
       properties: {},
@@ -391,6 +407,9 @@ export const timerTools = {
   everhour_get_running_timer: {
     name: 'everhour_get_running_timer',
     description: 'Get the currently running timer using the /timer/running endpoint.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['timers'],
     inputSchema: {
       type: 'object',
       properties: {},
@@ -451,6 +470,9 @@ export const timerTools = {
   everhour_start_timer_for_task: {
     name: 'everhour_start_timer_for_task',
     description: 'Start a timer directly for a specific task using the /timer/start_for/{task_id} endpoint.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['timers'],
     inputSchema: {
       type: 'object',
       properties: {

@@ -4,7 +4,8 @@ import {
   EverHourClient, 
   CreateClientParams, 
   UpdateClientParams, 
-  ListParams 
+  ListParams,
+  MCPTools 
 } from '../types/everhour.js';
 
 // Zod schemas for input validation
@@ -43,10 +44,13 @@ const DeleteClientSchema = z.object({
   id: z.number(),
 });
 
-export const clientTools = {
+export const clientTools: MCPTools = {
   everhour_list_clients: {
     name: 'everhour_list_clients',
     description: 'List all clients from Everhour. Supports pagination and search query.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['clients'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -105,6 +109,9 @@ export const clientTools = {
   everhour_get_client: {
     name: 'everhour_get_client',
     description: 'Get details of a specific client by ID.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['clients'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -155,6 +162,9 @@ export const clientTools = {
   everhour_create_client: {
     name: 'everhour_create_client',
     description: 'Create a new client in Everhour.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['clients'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -228,6 +238,9 @@ export const clientTools = {
   everhour_update_client: {
     name: 'everhour_update_client',
     description: 'Update an existing client in Everhour.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['clients'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -305,6 +318,9 @@ export const clientTools = {
   everhour_delete_client: {
     name: 'everhour_delete_client',
     description: 'Delete a client from Everhour. This action cannot be undone.',
+    readonly: false,
+    operationType: 'delete',
+    affectedResources: ['clients'],
     inputSchema: {
       type: 'object',
       properties: {

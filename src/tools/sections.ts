@@ -4,7 +4,8 @@ import {
   EverHourSection, 
   CreateSectionParams, 
   UpdateSectionParams, 
-  ListParams 
+  ListParams,
+  MCPTools 
 } from '../types/everhour.js';
 
 // Zod schemas for input validation
@@ -34,10 +35,13 @@ const DeleteSectionSchema = z.object({
   id: z.string(),
 });
 
-export const sectionTools = {
+export const sectionTools: MCPTools = {
   everhour_list_all_sections: {
     name: 'everhour_list_all_sections',
     description: 'List all sections from Everhour using the global /sections endpoint. Supports pagination and search query.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['sections'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -97,6 +101,9 @@ export const sectionTools = {
   everhour_get_section: {
     name: 'everhour_get_section',
     description: 'Get details of a specific section by ID.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['sections'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -148,6 +155,9 @@ export const sectionTools = {
   everhour_create_section: {
     name: 'everhour_create_section',
     description: 'Create a new section in Everhour.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['sections'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -208,6 +218,9 @@ export const sectionTools = {
   everhour_update_section: {
     name: 'everhour_update_section',
     description: 'Update an existing section in Everhour.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['sections'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -268,6 +281,9 @@ export const sectionTools = {
   everhour_delete_section: {
     name: 'everhour_delete_section',
     description: 'Delete a section from Everhour. This action cannot be undone.',
+    readonly: false,
+    operationType: 'delete',
+    affectedResources: ['sections'],
     inputSchema: {
       type: 'object',
       properties: {

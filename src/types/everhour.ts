@@ -249,3 +249,27 @@ export interface ListParams {
   from?: string; // date YYYY-MM-DD
   to?: string; // date YYYY-MM-DD
 }
+
+// MCP Tool Types
+import type { EverHourApiClient } from '../api/everhour-client.js';
+
+export interface MCPToolDefinition {
+  name: string;
+  description: string;
+  inputSchema: any;
+  handler: (client: EverHourApiClient, args: any) => Promise<any>;
+  readonly: boolean; // true = safe for readonly mode, false = modifies data
+  operationType: 'read' | 'write' | 'delete';
+  affectedResources: string[]; // e.g., ['projects', 'tasks', 'time']
+}
+
+export interface MCPTools {
+  [key: string]: MCPToolDefinition;
+}
+
+export interface ReadonlyConfig {
+  enabled: boolean;
+  allowedOperations: ('read' | 'write' | 'delete')[];
+  blockedTools: string[];
+  customRules?: (toolName: string, operationType: string) => boolean;
+}

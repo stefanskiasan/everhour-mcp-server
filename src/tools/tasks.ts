@@ -4,7 +4,8 @@ import {
   EverHourTask, 
   CreateTaskParams, 
   UpdateTaskParams, 
-  ListParams 
+  ListParams,
+  MCPTools 
 } from '../types/everhour.js';
 
 // Zod schemas for input validation
@@ -45,10 +46,13 @@ const DeleteTaskSchema = z.object({
   id: z.string(),
 });
 
-export const taskTools = {
+export const taskTools: MCPTools = {
   everhour_list_tasks: {
     name: 'everhour_list_tasks',
     description: 'List all tasks from Everhour. Supports filtering by status, project, assignee, and search query.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['tasks'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -127,6 +131,9 @@ export const taskTools = {
   everhour_get_task: {
     name: 'everhour_get_task',
     description: 'Get details of a specific task by ID.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['tasks'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -184,6 +191,9 @@ export const taskTools = {
   everhour_create_task: {
     name: 'everhour_create_task',
     description: 'Create a new task in Everhour.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['tasks'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -269,6 +279,9 @@ export const taskTools = {
   everhour_update_task: {
     name: 'everhour_update_task',
     description: 'Update an existing task in Everhour.',
+    readonly: false,
+    operationType: 'write',
+    affectedResources: ['tasks'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -355,6 +368,9 @@ export const taskTools = {
   everhour_delete_task: {
     name: 'everhour_delete_task',
     description: 'Delete a task from Everhour. This action cannot be undone.',
+    readonly: false,
+    operationType: 'delete',
+    affectedResources: ['tasks'],
     inputSchema: {
       type: 'object',
       properties: {

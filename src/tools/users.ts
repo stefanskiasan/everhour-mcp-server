@@ -2,7 +2,8 @@ import { z } from 'zod';
 import { EverHourApiClient } from '../api/everhour-client.js';
 import { 
   EverHourUser, 
-  ListParams 
+  ListParams,
+  MCPTools 
 } from '../types/everhour.js';
 
 // Zod schemas for input validation
@@ -16,10 +17,13 @@ const GetUserSchema = z.object({
   id: z.number(),
 });
 
-export const userTools = {
+export const userTools: MCPTools = {
   everhour_get_current_user: {
     name: 'everhour_get_current_user',
     description: 'Get the current user profile using the /me endpoint.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['users'],
     inputSchema: {
       type: 'object',
       properties: {},
@@ -65,6 +69,9 @@ export const userTools = {
   everhour_list_team_users: {
     name: 'everhour_list_team_users',
     description: 'List all team users using the /users endpoint. Supports pagination and search query.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['users'],
     inputSchema: {
       type: 'object',
       properties: {
@@ -126,6 +133,9 @@ export const userTools = {
   everhour_get_user: {
     name: 'everhour_get_user',
     description: 'Get details of a specific team user by ID.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['users'],
     inputSchema: {
       type: 'object',
       properties: {

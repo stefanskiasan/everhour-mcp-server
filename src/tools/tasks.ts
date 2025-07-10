@@ -49,7 +49,7 @@ const DeleteTaskSchema = z.object({
 export const taskTools: MCPTools = {
   everhour_list_tasks: {
     name: 'everhour_list_tasks',
-    description: 'List all tasks from Everhour. Supports filtering by status, project, assignee, and search query.',
+    description: 'Search tasks from Everhour. Requires either a query or project parameter. Supports filtering by status, project, assignee, and search query.',
     readonly: true,
     operationType: 'read',
     affectedResources: ['tasks'],

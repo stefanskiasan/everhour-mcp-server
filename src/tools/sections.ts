@@ -38,7 +38,7 @@ const DeleteSectionSchema = z.object({
 export const sectionTools: MCPTools = {
   everhour_list_all_sections: {
     name: 'everhour_list_all_sections',
-    description: 'List all sections from Everhour using the global /sections endpoint. Supports pagination and search query.',
+    description: 'List all sections from Everhour by iterating through all projects. Supports pagination and search query.',
     readonly: true,
     operationType: 'read',
     affectedResources: ['sections'],

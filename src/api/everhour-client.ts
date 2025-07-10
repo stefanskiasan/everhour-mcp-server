@@ -86,6 +86,12 @@ export class EverHourApiClient {
 
   // Tasks
   async getTasks(params?: ListParams): Promise<EverHourTask[]> {
+    // /tasks/search requires at least a query parameter
+    if (!params?.query && !params?.project) {
+      // If no search criteria provided, return empty array instead of error
+      return [];
+    }
+    
     const response: AxiosResponse<EverHourTask[]> = await this.client.get('/tasks/search', {
       params,
     });
@@ -273,7 +279,7 @@ export class EverHourApiClient {
 
   // Users
   async getUsers(params?: ListParams): Promise<EverHourUser[]> {
-    const response: AxiosResponse<EverHourUser[]> = await this.client.get('/users', {
+    const response: AxiosResponse<EverHourUser[]> = await this.client.get('/team/users', {
       params,
     });
     return response.data;
@@ -436,34 +442,46 @@ export class EverHourApiClient {
     return response.data;
   }
 
-  // Schedule/Resource Planning
+  // Schedule/Resource Planning - These endpoints don't exist in the Everhour API
+  // Commenting out until/unless they become available
+  /*
   async getScheduleAssignments(params?: ListParams): Promise<any[]> {
-    const response: AxiosResponse<any[]> = await this.client.get('/schedule/assignments', {
-      params,
-    });
-    return response.data;
+    throw new Error('Schedule/Resource Planning endpoints are not available in the Everhour API');
   }
 
   async createScheduleAssignment(params: any): Promise<any> {
-    const response: AxiosResponse<any> = await this.client.post('/schedule/assignments', params);
-    return response.data;
+    throw new Error('Schedule/Resource Planning endpoints are not available in the Everhour API');
   }
 
   async updateScheduleAssignment(id: number, params: any): Promise<any> {
-    const response: AxiosResponse<any> = await this.client.put(`/schedule/assignments/${id}`, params);
-    return response.data;
+    throw new Error('Schedule/Resource Planning endpoints are not available in the Everhour API');
   }
 
   async deleteScheduleAssignment(id: number): Promise<void> {
-    await this.client.delete(`/schedule/assignments/${id}`);
+    throw new Error('Schedule/Resource Planning endpoints are not available in the Everhour API');
   }
+  */
 
   // Sections
   async getAllSections(params?: ListParams): Promise<EverHourSection[]> {
-    const response: AxiosResponse<EverHourSection[]> = await this.client.get('/sections', {
-      params,
-    });
-    return response.data;
+    // The global /sections endpoint doesn't exist, so we need to get sections from all projects
+    // Limit the number of projects to check to avoid timeouts
+    const projects = await this.getProjects({ limit: 20 });
+    const allSections: EverHourSection[] = [];
+    
+    // Process projects in smaller batches to avoid timeouts
+    for (let i = 0; i < Math.min(projects.length, 10); i++) {
+      const project = projects[i];
+      try {
+        const projectSections = await this.getSections(project.id, params);
+        allSections.push(...projectSections);
+      } catch (error) {
+        // Skip projects without sections or with permission issues
+        continue;
+      }
+    }
+    
+    return allSections;
   }
 
   async getSections(projectId: string, params?: ListParams): Promise<EverHourSection[]> {

@@ -25,7 +25,7 @@ const ListTimeRecordsSchema = z.object({
 });
 
 const GetTimeRecordSchema = z.object({
-  id: z.string(),
+  id: z.number(),
 });
 
 const CreateTimeRecordSchema = z.object({
@@ -42,7 +42,7 @@ const CreateTimeRecordSchema = z.object({
 });
 
 const UpdateTimeRecordSchema = z.object({
-  id: z.string(),
+  id: z.number(),
   time: z.union([
     z.number().positive('Time must be positive'),
     z.string().min(1, 'Time is required')
@@ -57,7 +57,7 @@ const UpdateTimeRecordSchema = z.object({
 });
 
 const DeleteTimeRecordSchema = z.object({
-  id: z.string(),
+  id: z.number(),
 });
 
 export const timeRecordTools: MCPTools = {

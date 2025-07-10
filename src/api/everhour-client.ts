@@ -86,7 +86,7 @@ export class EverHourApiClient {
 
   // Tasks
   async getTasks(params?: ListParams): Promise<EverHourTask[]> {
-    const response: AxiosResponse<EverHourTask[]> = await this.client.get('/tasks', {
+    const response: AxiosResponse<EverHourTask[]> = await this.client.get('/tasks/search', {
       params,
     });
     return response.data;
@@ -97,8 +97,8 @@ export class EverHourApiClient {
     return response.data;
   }
 
-  async createTask(params: CreateTaskParams): Promise<EverHourTask> {
-    const response: AxiosResponse<EverHourTask> = await this.client.post('/tasks', params);
+  async createTask(projectId: string, params: CreateTaskParams): Promise<EverHourTask> {
+    const response: AxiosResponse<EverHourTask> = await this.client.post(`/projects/${projectId}/tasks`, params);
     return response.data;
   }
 
@@ -112,7 +112,7 @@ export class EverHourApiClient {
   }
 
   async getTasksForProject(projectId: string, params?: ListParams): Promise<EverHourTask[]> {
-    const response: AxiosResponse<EverHourTask[]> = await this.client.get(`/tasks/for_project/${projectId}`, {
+    const response: AxiosResponse<EverHourTask[]> = await this.client.get(`/projects/${projectId}/tasks`, {
       params,
     });
     return response.data;
@@ -143,37 +143,53 @@ export class EverHourApiClient {
     await this.client.delete(`/tasks/${id}/time`);
   }
 
+  async getTaskTime(id: string): Promise<EverHourTimeRecord[]> {
+    const response: AxiosResponse<EverHourTimeRecord[]> = await this.client.get(`/tasks/${id}/time`);
+    return response.data;
+  }
+
+  async getProjectTime(id: string): Promise<EverHourTimeRecord[]> {
+    const response: AxiosResponse<EverHourTimeRecord[]> = await this.client.get(`/projects/${id}/time`);
+    return response.data;
+  }
+
+  async getUserTime(id: number): Promise<EverHourTimeRecord[]> {
+    const response: AxiosResponse<EverHourTimeRecord[]> = await this.client.get(`/users/${id}/time`);
+    return response.data;
+  }
+
   // Time Records
   async getTimeRecords(params?: ListParams): Promise<EverHourTimeRecord[]> {
-    const response: AxiosResponse<EverHourTimeRecord[]> = await this.client.get('/time', {
+    const response: AxiosResponse<EverHourTimeRecord[]> = await this.client.get('/team/time', {
       params,
     });
     return response.data;
   }
 
-  async getTimeRecord(id: string): Promise<EverHourTimeRecord> {
-    const response: AxiosResponse<EverHourTimeRecord> = await this.client.get(`/time/${id}`);
-    return response.data;
-  }
 
   async createTimeRecord(params: CreateTimeRecordParams): Promise<EverHourTimeRecord> {
     const response: AxiosResponse<EverHourTimeRecord> = await this.client.post('/time', params);
     return response.data;
   }
 
-  async updateTimeRecord(id: string, params: UpdateTimeRecordParams): Promise<EverHourTimeRecord> {
+  async updateTimeRecord(id: number, params: UpdateTimeRecordParams): Promise<EverHourTimeRecord> {
     const response: AxiosResponse<EverHourTimeRecord> = await this.client.put(`/time/${id}`, params);
     return response.data;
   }
 
-  async deleteTimeRecord(id: string): Promise<void> {
+  async deleteTimeRecord(id: number): Promise<void> {
     await this.client.delete(`/time/${id}`);
   }
 
-  // Timers (corrected endpoints)
+  async getTimeRecord(id: number): Promise<EverHourTimeRecord> {
+    const response: AxiosResponse<EverHourTimeRecord> = await this.client.get(`/time/${id}`);
+    return response.data;
+  }
+
+  // Timers (corrected endpoints based on API docs)
   async getCurrentTimer(): Promise<EverHourTimer | null> {
     try {
-      const response: AxiosResponse<EverHourTimer> = await this.client.get('/timer');
+      const response: AxiosResponse<EverHourTimer> = await this.client.get('/timers/current');
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 404) {
@@ -184,31 +200,39 @@ export class EverHourApiClient {
   }
 
   async getRunningTimer(): Promise<EverHourTimer | null> {
-    try {
-      const response: AxiosResponse<EverHourTimer> = await this.client.get('/timer/running');
-      return response.data;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
-        return null; // No running timer
-      }
-      throw error;
-    }
+    // Alias for getCurrentTimer for backward compatibility
+    return this.getCurrentTimer();
+  }
+
+  async getAllTeamTimers(): Promise<EverHourTimer[]> {
+    const response: AxiosResponse<EverHourTimer[]> = await this.client.get('/timers');
+    return response.data;
   }
 
   async startTimer(params: TimerStartParams): Promise<EverHourTimer> {
-    const response: AxiosResponse<EverHourTimer> = await this.client.post('/timer/start', params);
+    const response: AxiosResponse<EverHourTimer> = await this.client.post('/timers', params);
     return response.data;
   }
 
   async startTimerForTask(taskId: string, comment?: string): Promise<EverHourTimer> {
-    const response: AxiosResponse<EverHourTimer> = await this.client.post(`/timer/start_for/${taskId}`, {
+    const response: AxiosResponse<EverHourTimer> = await this.client.post('/timers', {
+      task: taskId,
       comment
     });
     return response.data;
   }
 
-  async stopTimer(): Promise<EverHourTimer> {
-    const response: AxiosResponse<EverHourTimer> = await this.client.post('/timer/stop');
+  async stopTimer(timerId?: number): Promise<EverHourTimeRecord> {
+    // If no timer ID provided, get current timer first
+    if (!timerId) {
+      const currentTimer = await this.getCurrentTimer();
+      if (!currentTimer || !currentTimer.id) {
+        throw new Error('No active timer found to stop');
+      }
+      timerId = Number(currentTimer.id);
+    }
+    
+    const response: AxiosResponse<EverHourTimeRecord> = await this.client.post(`/timers/${timerId}/stop`);
     return response.data;
   }
 
@@ -249,20 +273,189 @@ export class EverHourApiClient {
 
   // Users
   async getUsers(params?: ListParams): Promise<EverHourUser[]> {
-    const response: AxiosResponse<EverHourUser[]> = await this.client.get('/team', {
+    const response: AxiosResponse<EverHourUser[]> = await this.client.get('/users', {
       params,
     });
     return response.data;
   }
 
-  async getUser(id: number): Promise<EverHourUser> {
-    const response: AxiosResponse<EverHourUser> = await this.client.get(`/team/${id}`);
+
+  async getCurrentUser(): Promise<EverHourUser> {
+    const response: AxiosResponse<EverHourUser> = await this.client.get('/users/me');
     return response.data;
   }
 
-  async getCurrentUser(): Promise<EverHourUser> {
-    const response: AxiosResponse<EverHourUser> = await this.client.get('/me');
+  // Timecards (Clock In/Out)
+  async getTimecards(params?: ListParams): Promise<any[]> {
+    const response: AxiosResponse<any[]> = await this.client.get('/timecards', {
+      params,
+    });
     return response.data;
+  }
+
+  async getTimecard(id: number): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.get(`/timecards/${id}`);
+    return response.data;
+  }
+
+  async getUserTimecards(userId: number, params?: ListParams): Promise<any[]> {
+    const response: AxiosResponse<any[]> = await this.client.get(`/users/${userId}/timecards`, {
+      params,
+    });
+    return response.data;
+  }
+
+  async updateTimecard(id: number, params: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.put(`/timecards/${id}`, params);
+    return response.data;
+  }
+
+  async deleteTimecard(id: number): Promise<void> {
+    await this.client.delete(`/timecards/${id}`);
+  }
+
+  async clockIn(userId: number, date?: string): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.post('/timecards/clock-in', {
+      user: userId,
+      date: date || new Date().toISOString().split('T')[0]
+    });
+    return response.data;
+  }
+
+  async clockOut(userId: number): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.post('/timecards/clock-out', {
+      user: userId
+    });
+    return response.data;
+  }
+
+  // Invoices
+  async getInvoices(params?: ListParams): Promise<any[]> {
+    const response: AxiosResponse<any[]> = await this.client.get('/invoices', {
+      params,
+    });
+    return response.data;
+  }
+
+  async getInvoice(id: number): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.get(`/invoices/${id}`);
+    return response.data;
+  }
+
+  async createInvoice(params: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.post('/invoices', params);
+    return response.data;
+  }
+
+  async updateInvoice(id: number, params: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.put(`/invoices/${id}`, params);
+    return response.data;
+  }
+
+  async deleteInvoice(id: number): Promise<void> {
+    await this.client.delete(`/invoices/${id}`);
+  }
+
+  async refreshInvoiceLineItems(id: number): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.post(`/invoices/${id}/refresh`);
+    return response.data;
+  }
+
+  async updateInvoiceStatus(id: number, status: 'draft' | 'sent' | 'paid'): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.put(`/invoices/${id}/status`, {
+      status
+    });
+    return response.data;
+  }
+
+  async exportInvoice(id: number, system: 'xero' | 'quickbooks' | 'freshbooks'): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.post(`/invoices/${id}/export`, {
+      system
+    });
+    return response.data;
+  }
+
+  // Expenses
+  async getExpenses(params?: ListParams): Promise<any[]> {
+    const response: AxiosResponse<any[]> = await this.client.get('/expenses', {
+      params,
+    });
+    return response.data;
+  }
+
+  async createExpense(params: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.post('/expenses', params);
+    return response.data;
+  }
+
+  async updateExpense(id: number, params: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.put(`/expenses/${id}`, params);
+    return response.data;
+  }
+
+  async deleteExpense(id: number): Promise<void> {
+    await this.client.delete(`/expenses/${id}`);
+  }
+
+  async getExpenseCategories(): Promise<any[]> {
+    const response: AxiosResponse<any[]> = await this.client.get('/expenses/categories');
+    return response.data;
+  }
+
+  async createExpenseCategory(name: string): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.post('/expenses/categories', {
+      name
+    });
+    return response.data;
+  }
+
+  async updateExpenseCategory(id: number, name: string): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.put(`/expenses/categories/${id}`, {
+      name
+    });
+    return response.data;
+  }
+
+  async deleteExpenseCategory(id: number): Promise<void> {
+    await this.client.delete(`/expenses/categories/${id}`);
+  }
+
+  async createExpenseAttachment(file: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.post('/expenses/attachments', file, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
+  }
+
+  async addAttachmentToExpense(expenseId: number, attachmentId: number): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.post(`/expenses/${expenseId}/attachments`, {
+      attachmentId
+    });
+    return response.data;
+  }
+
+  // Schedule/Resource Planning
+  async getScheduleAssignments(params?: ListParams): Promise<any[]> {
+    const response: AxiosResponse<any[]> = await this.client.get('/schedule/assignments', {
+      params,
+    });
+    return response.data;
+  }
+
+  async createScheduleAssignment(params: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.post('/schedule/assignments', params);
+    return response.data;
+  }
+
+  async updateScheduleAssignment(id: number, params: any): Promise<any> {
+    const response: AxiosResponse<any> = await this.client.put(`/schedule/assignments/${id}`, params);
+    return response.data;
+  }
+
+  async deleteScheduleAssignment(id: number): Promise<void> {
+    await this.client.delete(`/schedule/assignments/${id}`);
   }
 
   // Sections

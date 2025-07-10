@@ -236,7 +236,8 @@ export const taskTools: MCPTools = {
       const params = CreateTaskSchema.parse(args);
       
       try {
-        const task = await client.createTask(params);
+        const { project, ...taskParams } = params;
+        const task = await client.createTask(project, taskParams);
         
         return {
           content: [

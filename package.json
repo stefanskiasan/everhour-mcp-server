@@ -1,6 +1,9 @@
 {
-  "name": "@everhour/mcp-server",
-  "version": "2.1.0",
+  "name": "@asanstefanski/everhour-mcp-server",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "2.2.0",
   "description": "Complete Everhour API integration for Model Context Protocol (MCP) with 100% endpoint coverage",
   "main": "build/index.js",
   "type": "module",

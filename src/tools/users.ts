@@ -13,9 +13,6 @@ const ListUsersSchema = z.object({
   query: z.string().optional(),
 });
 
-const GetUserSchema = z.object({
-  id: z.number(),
-});
 
 export const userTools: MCPTools = {
   everhour_get_current_user: {
@@ -130,59 +127,4 @@ export const userTools: MCPTools = {
     },
   },
 
-  everhour_get_user: {
-    name: 'everhour_get_user',
-    description: 'Get details of a specific team user by ID.',
-    readonly: true,
-    operationType: 'read',
-    affectedResources: ['users'],
-    inputSchema: {
-      type: 'object',
-      properties: {
-        id: {
-          type: 'number',
-          description: 'User ID',
-        },
-      },
-      required: ['id'],
-    },
-    handler: async (client: EverHourApiClient, args: any) => {
-      const { id } = GetUserSchema.parse(args);
-      
-      try {
-        const user = await client.getUser(id);
-        
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify({
-                user: {
-                  id: user.id,
-                  name: user.name,
-                  email: user.email,
-                  role: user.role,
-                  status: user.status,
-                  avatarUrl: user.avatarUrl,
-                  timezone: user.timezone,
-                  createdAt: user.createdAt,
-                  updatedAt: user.updatedAt,
-                },
-              }, null, 2),
-            },
-          ],
-        };
-      } catch (error) {
-        return {
-          content: [
-            {
-              type: 'text',
-              text: `Error getting user: ${error instanceof Error ? error.message : 'Unknown error'}`,
-            },
-          ],
-          isError: true,
-        };
-      }
-    },
-  },
 };

@@ -217,7 +217,7 @@ export const timerTools: MCPTools = {
           };
         }
         
-        const timer = await client.stopTimer();
+        const timeRecord = await client.stopTimer();
         
         return {
           content: [
@@ -225,18 +225,16 @@ export const timerTools: MCPTools = {
               type: 'text',
               text: JSON.stringify({
                 success: true,
-                timer: {
-                  id: timer.id,
-                  status: timer.status,
-                  startedAt: timer.startedAt,
-                  task: timer.task,
-                  project: timer.project,
-                  user: timer.user,
-                  comment: timer.comment,
-                  duration: timer.duration,
-                  durationFormatted: timer.duration ? client.formatTime(timer.duration) : null,
+                timeRecord: {
+                  id: timeRecord.id,
+                  time: timeRecord.time,
+                  date: timeRecord.date,
+                  task: timeRecord.task,
+                  user: timeRecord.user,
+                  comment: timeRecord.comment,
+                  timeFormatted: timeRecord.time ? client.formatTime(timeRecord.time) : null,
                 },
-                message: `Timer stopped successfully. Duration: ${timer.duration ? client.formatTime(timer.duration) : 'Unknown'}`,
+                message: `Timer stopped successfully. Time recorded: ${timeRecord.time ? client.formatTime(timeRecord.time) : 'Unknown'}`,
               }, null, 2),
             },
           ],

@@ -184,7 +184,6 @@ export interface UpdateProjectParams {
 
 export interface CreateTaskParams {
   name: string;
-  project: string;
   section?: string;
   assignee?: number;
   type?: 'task' | 'bug' | 'feature';
@@ -248,6 +247,86 @@ export interface ListParams {
   assignee?: number;
   from?: string; // date YYYY-MM-DD
   to?: string; // date YYYY-MM-DD
+}
+
+// Timecard interfaces
+export interface EverHourTimecard {
+  id: number;
+  user: number;
+  date: string;
+  clockIn: string;
+  clockOut: string;
+}
+
+export interface CreateTimecardParams {
+  user: number;
+  date?: string;
+}
+
+export interface UpdateTimecardParams {
+  clockIn?: string;
+  clockOut?: string;
+}
+
+// Invoice interfaces
+export interface EverHourInvoice {
+  id: number;
+  number: string;
+  status: 'draft' | 'sent' | 'paid';
+  total: number;
+}
+
+export interface CreateInvoiceParams {
+  number: string;
+  status?: 'draft' | 'sent' | 'paid';
+}
+
+export interface UpdateInvoiceParams {
+  status?: 'draft' | 'sent' | 'paid';
+}
+
+// Expense interfaces
+export interface EverHourExpense {
+  id: number;
+  amount: number;
+  date: string;
+  description: string;
+}
+
+export interface CreateExpenseParams {
+  amount: number;
+  date: string;
+  description?: string;
+}
+
+export interface UpdateExpenseParams {
+  amount?: number;
+  description?: string;
+}
+
+export interface EverHourExpenseCategory {
+  id: number;
+  name: string;
+}
+
+// Schedule/Assignment interfaces
+export interface EverHourAssignment {
+  id: number;
+  user: number;
+  project: string;
+  date: string;
+  hours: number;
+}
+
+export interface CreateAssignmentParams {
+  user: number;
+  project: string;
+  date: string;
+  hours: number;
+}
+
+export interface UpdateAssignmentParams {
+  hours?: number;
 }
 
 // MCP Tool Types

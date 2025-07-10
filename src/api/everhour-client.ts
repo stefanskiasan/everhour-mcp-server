@@ -159,8 +159,15 @@ export class EverHourApiClient {
     return response.data;
   }
 
-  async getUserTime(id: number): Promise<EverHourTimeRecord[]> {
-    const response: AxiosResponse<EverHourTimeRecord[]> = await this.client.get(`/users/${id}/time`);
+  async getUserTime(id: number, params?: {
+    from?: string;    // Date from (YYYY-MM-DD format)
+    to?: string;      // Date to (YYYY-MM-DD format)
+    limit?: number;   // Max results for pagination
+    page?: number;    // Page number
+  }): Promise<EverHourTimeRecord[]> {
+    const response: AxiosResponse<EverHourTimeRecord[]> = await this.client.get(`/users/${id}/time`, {
+      params,
+    });
     return response.data;
   }
 

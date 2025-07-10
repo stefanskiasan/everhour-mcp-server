@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "Complete Everhour API integration for Model Context Protocol (MCP) with 100% endpoint coverage",
   "main": "build/index.js",
   "type": "module",

@@ -415,4 +415,90 @@ export const timeRecordTools: MCPTools = {
       }
     },
   },
+
+  everhour_get_user_time: {
+    name: 'everhour_get_user_time',
+    description: 'Get time records for a specific user with date range and pagination support.',
+    readonly: true,
+    operationType: 'read',
+    affectedResources: ['time'],
+    inputSchema: {
+      type: 'object',
+      properties: {
+        userId: {
+          type: 'number',
+          description: 'User ID to get time records for',
+        },
+        from: {
+          type: 'string',
+          description: 'Start date for time records (YYYY-MM-DD format, e.g., "2024-01-01")',
+        },
+        to: {
+          type: 'string',
+          description: 'End date for time records (YYYY-MM-DD format, e.g., "2024-01-31")',
+        },
+        limit: {
+          type: 'number',
+          description: 'Maximum number of results per page (default: 100)',
+        },
+        page: {
+          type: 'number',
+          description: 'Page number for pagination (default: 1)',
+        },
+      },
+      required: ['userId'],
+    },
+    handler: async (client: EverHourApiClient, args: any) => {
+      const { userId, from, to, limit, page } = args;
+      
+      try {
+        const timeRecords = await client.getUserTime(userId, {
+          from,
+          to,
+          limit,
+          page,
+        });
+        
+        return {
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                timeRecords: timeRecords.map(record => ({
+                  id: record.id,
+                  comment: record.comment,
+                  time: record.time,
+                  timeFormatted: client.formatTime(record.time),
+                  date: record.date,
+                  task: record.task,
+                  project: record.project,
+                  user: record.user,
+                  createdAt: record.createdAt,
+                  updatedAt: record.updatedAt,
+                })),
+                total: timeRecords.length,
+                totalTime: timeRecords.reduce((sum, record) => sum + record.time, 0),
+                totalTimeFormatted: client.formatTime(timeRecords.reduce((sum, record) => sum + record.time, 0)),
+                dateRange: from && to ? `${from} to ${to}` : 'All time',
+                pagination: {
+                  page: page || 1,
+                  limit: limit || 100,
+                },
+              }, null, 2),
+            },
+          ],
+        };
+      } catch (error) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Error getting user time records: ${error instanceof Error ? error.message : 'Unknown error'}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    },
+  },
 };

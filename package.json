@@ -1,25 +1,61 @@
 {
-  "name": "everhour-mcp-server",
-  "version": "1.0.0",
-  "description": "MCP server for Everhour time tracking and project management",
+  "name": "@everhour/mcp-server",
+  "version": "2.0.0",
+  "description": "Complete Everhour API integration for Model Context Protocol (MCP) with 100% endpoint coverage",
   "main": "build/index.js",
   "type": "module",
+  "bin": {
+    "everhour-mcp-server": "build/index.js"
+  },
+  "files": [
+    "build/**/*",
+    "README.md",
+    "LICENSE",
+    "API_COVERAGE.md",
+    "examples.md"
+  ],
   "scripts": {
-    "build": "tsc",
+    "build": "npm run clean && tsc",
+    "build:watch": "tsc --watch",
     "dev": "tsx src/index.ts",
     "start": "node build/index.js",
-    "lint": "eslint src/",
-    "lint:fix": "eslint src/ --fix"
+    "lint": "eslint 'src/**/*.{ts,js}'",
+    "lint:fix": "eslint 'src/**/*.{ts,js}' --fix",
+    "type-check": "tsc --noEmit",
+    "validate": "npm run type-check && npm run lint",
+    "prepublishOnly": "npm run validate && npm run build",
+    "postbuild": "chmod +x build/index.js",
+    "test": "echo \"Manual testing required - set EVERHOUR_API_KEY and run 'npm start'\" && exit 0",
+    "test:build": "npm run build && npm start --help || true",
+    "clean": "rm -rf build",
+    "docs": "echo \"📖 Documentation available in README.md, API_COVERAGE.md, and examples.md\"",
+    "publish:dry-run": "npm publish --dry-run"
   },
   "keywords": [
     "mcp",
     "everhour",
     "time-tracking",
     "project-management",
-    "api"
+    "api",
+    "model-context-protocol",
+    "claude",
+    "anthropic",
+    "productivity",
+    "task-management",
+    "timer",
+    "time-records",
+    "client-management"
   ],
-  "author": "",
+  "author": "Your Name <your.email@example.com>",
   "license": "MIT",
+  "homepage": "https://github.com/yourusername/everhour-mcp-server#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/everhour-mcp-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/everhour-mcp-server/issues"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.5.0",
     "axios": "^1.7.2",

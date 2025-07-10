@@ -1,103 +1,95 @@
-# Everhour MCP Server
+# @everhour/mcp-server
 
-A Model Context Protocol (MCP) server that provides comprehensive integration with the Everhour API for time tracking, project management, and productivity workflows.
+[![npm version](https://badge.fury.io/js/%40everhour%2Fmcp-server.svg)](https://badge.fury.io/js/%40everhour%2Fmcp-server)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Features
+> **Complete Everhour API integration for Model Context Protocol (MCP) with 100% endpoint coverage**
 
-- **Project Management**: List, create, update, and delete projects
-- **Task Management**: Full CRUD operations for tasks
-- **Time Tracking**: Create, update, and manage time records
-- **Timer Control**: Start, stop, and monitor active timers
-- **Client Management**: Manage clients and their business details
-- **Rich Data**: Formatted time displays and comprehensive project/task information
+A comprehensive MCP server that provides seamless integration with the Everhour API, enabling AI assistants like Claude to manage time tracking, projects, tasks, and team productivity workflows.
 
-## Prerequisites
+## 🚀 Quick Start
 
-- Node.js 18 or higher
-- Everhour account with API access (requires paid plan)
-- Everhour API key
-
-## Installation
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd everhour-mcp-server
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Set up environment variables:
-```bash
-cp .env.example .env
-# Edit .env and add your Everhour API key
-```
-
-4. Build the project:
-```bash
-npm run build
-```
-
-## Configuration
-
-### Environment Variables
-
-Create a `.env` file in the root directory:
+### Installation
 
 ```bash
-# Required
-EVERHOUR_API_KEY=your_everhour_api_key_here
+# Using npx (recommended)
+npx @everhour/mcp-server
 
-# Optional
-EVERHOUR_API_BASE_URL=https://api.everhour.com
+# Or install globally
+npm install -g @everhour/mcp-server
+everhour-mcp-server
 ```
 
-### Getting Your API Key
+### Prerequisites
 
-1. Log into your Everhour account
-2. Go to Settings > API
-3. Generate a new API key
-4. Copy the key to your `.env` file
+- **Node.js 18+**
+- **Everhour account** with paid plan (API access required)
+- **Everhour API key** (get it from [Everhour Settings → My Profile](https://app.everhour.com/#/account/profile))
 
-## Usage
+### Configuration
 
-### Development Mode
+Set your Everhour API key as an environment variable:
 
 ```bash
-npm run dev
+export EVERHOUR_API_KEY=\"your_api_key_here\"
 ```
 
-### Production Mode
+## 📋 MCP Client Setup
 
-```bash
-npm run build
-npm start
-```
+### Claude Desktop
 
-### MCP Integration
-
-Add the server to your MCP client configuration:
+Add to your Claude Desktop configuration:
 
 ```json
 {
-  "mcpServers": {
-    "everhour": {
-      "command": "node",
-      "args": ["/path/to/everhour-mcp-server/build/index.js"],
-      "env": {
-        "EVERHOUR_API_KEY": "your_api_key_here"
+  \"mcpServers\": {
+    \"everhour\": {
+      \"command\": \"npx\",
+      \"args\": [\"@everhour/mcp-server\"],
+      \"env\": {
+        \"EVERHOUR_API_KEY\": \"your_api_key_here\"
       }
     }
   }
 }
 ```
 
-## Available Tools (37 total)
+### Other MCP Clients
 
-### Projects (5 tools)
+For other MCP-compatible clients, use:
+
+```bash
+# Command
+npx @everhour/mcp-server
+
+# Environment Variables
+EVERHOUR_API_KEY=your_api_key_here
+```
+
+## ✨ Features
+
+### 🎯 **100% API Coverage**
+All 37 available Everhour API endpoints implemented as MCP tools
+
+### 🛠 **Complete Functionality**
+- **Project Management**: Create, update, list, and delete projects
+- **Task Management**: Full CRUD operations with estimates and time logging
+- **Time Tracking**: Comprehensive time record management
+- **Timer Control**: Start, stop, and monitor active timers
+- **Client Management**: Manage clients and business details
+- **Section Organization**: Project section management
+- **Team Collaboration**: User and team member management
+
+### 🔧 **Developer-Friendly**
+- **TypeScript**: Full type safety and IntelliSense support
+- **Input Validation**: Comprehensive validation with detailed error messages
+- **Human-Readable**: Time formats like \"2h 30m\" alongside seconds
+- **Error Handling**: Graceful error handling with helpful messages
+
+## 🔧 Available Tools (37 total)
+
+<details>
+<summary><strong>Projects (5 tools)</strong></summary>
 
 - `everhour_list_projects` - List all projects with filtering options
 - `everhour_get_project` - Get details of a specific project
@@ -105,7 +97,10 @@ Add the server to your MCP client configuration:
 - `everhour_update_project` - Update project details
 - `everhour_delete_project` - Delete a project
 
-### Tasks (11 tools)
+</details>
+
+<details>
+<summary><strong>Tasks (11 tools)</strong></summary>
 
 **Core Task Management:**
 - `everhour_list_tasks` - List tasks with filtering by project, status, assignee
@@ -122,7 +117,10 @@ Add the server to your MCP client configuration:
 - `everhour_update_task_time` - Update task time
 - `everhour_delete_task_time` - Delete time from task
 
-### Time Records (5 tools)
+</details>
+
+<details>
+<summary><strong>Time Records (5 tools)</strong></summary>
 
 - `everhour_list_time_records` - List time records with date/project filtering
 - `everhour_get_time_record` - Get details of a specific time record
@@ -130,7 +128,10 @@ Add the server to your MCP client configuration:
 - `everhour_update_time_record` - Update existing time records
 - `everhour_delete_time_record` - Delete a time record
 
-### Timers (7 tools)
+</details>
+
+<details>
+<summary><strong>Timers (7 tools)</strong></summary>
 
 **Core Timer Functions:**
 - `everhour_get_current_timer` - Get the currently running timer
@@ -143,7 +144,10 @@ Add the server to your MCP client configuration:
 - `everhour_get_running_timer` - Get running timer (alternative endpoint)
 - `everhour_start_timer_for_task` - Start timer directly for specific task
 
-### Clients (5 tools)
+</details>
+
+<details>
+<summary><strong>Clients (5 tools)</strong></summary>
 
 - `everhour_list_clients` - List all clients
 - `everhour_get_client` - Get details of a specific client
@@ -151,7 +155,10 @@ Add the server to your MCP client configuration:
 - `everhour_update_client` - Update client details
 - `everhour_delete_client` - Delete a client
 
-### Sections (5 tools)
+</details>
+
+<details>
+<summary><strong>Sections (5 tools)</strong></summary>
 
 - `everhour_list_all_sections` - List all sections (global search)
 - `everhour_get_section` - Get details of a specific section
@@ -159,22 +166,27 @@ Add the server to your MCP client configuration:
 - `everhour_update_section` - Update section details
 - `everhour_delete_section` - Delete a section
 
-### Users & Team Management (3 tools)
+</details>
+
+<details>
+<summary><strong>Users & Team Management (3 tools)</strong></summary>
 
 - `everhour_get_current_user` - Get current user profile
 - `everhour_list_team_users` - List all team users
 - `everhour_get_user` - Get details of a specific team user
 
-## Examples
+</details>
+
+## 📚 Examples
 
 ### Starting a Timer
 
 ```json
 {
-  "tool": "everhour_start_timer",
-  "arguments": {
-    "task": "task_id_here",
-    "comment": "Working on feature implementation"
+  \"tool\": \"everhour_start_timer_for_task\",
+  \"arguments\": {
+    \"taskId\": \"task_123\",
+    \"comment\": \"Working on user authentication feature\"
   }
 }
 ```
@@ -183,12 +195,12 @@ Add the server to your MCP client configuration:
 
 ```json
 {
-  "tool": "everhour_create_time_record",
-  "arguments": {
-    "time": "2h 30m",
-    "date": "2024-01-15",
-    "task": "task_id_here",
-    "comment": "Code review and testing"
+  \"tool\": \"everhour_create_time_record\",
+  \"arguments\": {
+    \"time\": \"2h 30m\",
+    \"date\": \"2024-01-15\",
+    \"task\": \"task_123\",
+    \"comment\": \"Implemented login functionality and wrote tests\"
   }
 }
 ```
@@ -197,67 +209,77 @@ Add the server to your MCP client configuration:
 
 ```json
 {
-  "tool": "everhour_create_project",
-  "arguments": {
-    "name": "Website Redesign",
-    "client": 123,
-    "type": "board",
-    "billing": {
-      "type": "hourly_rate",
-      "rate": 75.00
+  \"tool\": \"everhour_create_project\",
+  \"arguments\": {
+    \"name\": \"Mobile App Development\",
+    \"client\": 456,
+    \"type\": \"board\",
+    \"billing\": {
+      \"type\": \"hourly_rate\",
+      \"rate\": 85.00
     }
   }
 }
 ```
 
-### Listing Tasks
+### Getting Project Tasks
 
 ```json
 {
-  "tool": "everhour_list_tasks",
-  "arguments": {
-    "project": "project_id_here",
-    "status": "open",
-    "assignee": 456
+  \"tool\": \"everhour_get_tasks_for_project\",
+  \"arguments\": {
+    \"projectId\": \"proj_789\",
+    \"status\": \"open\"
   }
 }
 ```
 
-## Time Format Support
+## 🕐 Time Format Support
 
 The server supports flexible time input formats:
 
-- **Seconds**: `3600` (1 hour)
-- **Minutes**: `90m` (1 hour 30 minutes)
-- **Hours and Minutes**: `2h 30m` (2 hours 30 minutes)
-- **Full Format**: `1h 30m 45s` (1 hour 30 minutes 45 seconds)
+- **Human-readable**: `\"2h 30m\"`, `\"90m\"`, `\"1h 30m 45s\"`
+- **Minutes only**: `\"90m\"` (90 minutes)
+- **Seconds**: `3600` (1 hour in seconds)
 
-## Error Handling
+## 🔧 Environment Variables
 
-The server includes comprehensive error handling:
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `EVERHOUR_API_KEY` | ✅ Yes | - | Your Everhour API key |
+| `EVERHOUR_API_BASE_URL` | ❌ No | `https://api.everhour.com` | API base URL |
 
-- **Input Validation**: All inputs are validated using Zod schemas
-- **API Error Handling**: Everhour API errors are properly caught and formatted
-- **Network Errors**: Connection issues are handled gracefully
-- **Authentication**: Invalid API keys are detected and reported
+## 📖 Documentation
 
-## API Rate Limiting
+- **[API Coverage Report](./API_COVERAGE.md)** - Complete endpoint mapping
+- **[Examples Guide](./examples.md)** - Comprehensive usage examples
+- **[Official Everhour API](https://everhour.docs.apiary.io/)** - Official API documentation
 
-The server respects Everhour's API rate limits. If you encounter rate limiting:
+## 🛠 Development
 
-1. Reduce the frequency of requests
-2. Use pagination for large datasets
-3. Filter requests to reduce data transfer
+### Local Development
 
-## Development
+```bash
+# Clone repository
+git clone https://github.com/yourusername/everhour-mcp-server.git
+cd everhour-mcp-server
 
-### Scripts
+# Install dependencies
+npm install
 
-- `npm run dev` - Development mode with auto-reload
-- `npm run build` - Build TypeScript to JavaScript
-- `npm start` - Start the built server
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
+# Set environment variables
+cp .env.example .env
+# Edit .env with your API key
+
+# Development mode
+npm run dev
+
+# Build
+npm run build
+
+# Run built version
+npm start
+```
 
 ### Project Structure
 
@@ -269,46 +291,62 @@ src/
 │   ├── clients.ts            # Client management tools
 │   ├── projects.ts           # Project management tools
 │   ├── tasks.ts              # Task management tools
+│   ├── task-extensions.ts    # Extended task features
 │   ├── time-records.ts       # Time record tools
-│   └── timers.ts             # Timer control tools
+│   ├── timers.ts             # Timer control tools
+│   ├── sections.ts           # Section management tools
+│   └── users.ts              # User management tools
 ├── types/
 │   └── everhour.ts           # TypeScript type definitions
 └── index.ts                  # MCP server entry point
 ```
 
-## Contributing
+### Scripts
+
+- `npm run dev` - Development mode with auto-reload
+- `npm run build` - Build TypeScript to JavaScript
+- `npm start` - Start the built server
+- `npm run lint` - Run ESLint
+- `npm run lint:fix` - Fix ESLint issues
+- `npm run clean` - Clean build directory
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## License
+## 📄 License
 
-MIT License - see LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support
+## 🔗 Links
 
-For issues related to:
-- **This MCP server**: Open an issue in this repository
-- **Everhour API**: Check the [Everhour API documentation](https://everhour.docs.apiary.io/)
-- **MCP Protocol**: See the [MCP documentation](https://modelcontextprotocol.io/)
+- **[npm Package](https://www.npmjs.com/package/@everhour/mcp-server)**
+- **[GitHub Repository](https://github.com/yourusername/everhour-mcp-server)**
+- **[Everhour Official Site](https://everhour.com)**
+- **[Model Context Protocol](https://modelcontextprotocol.io/)**
 
-## Changelog
+## 📞 Support
 
-### v2.0.0 (Latest)
-- **COMPLETE Everhour API Coverage**: All 37 available endpoints implemented
-- **Extended Task Management**: Task estimates, direct time logging to tasks
-- **Advanced Timer Features**: Multiple timer endpoints, task-specific timer start
-- **Full Section Management**: CRUD operations for project sections
-- **User/Team Management**: Current user profile, team member listing
-- **Corrected API Endpoints**: Updated to use official Everhour API paths
-- **Enhanced Documentation**: Comprehensive examples and endpoint reference
+- **Issues**: [GitHub Issues](https://github.com/yourusername/everhour-mcp-server/issues)
+- **Everhour API**: [Official Documentation](https://everhour.docs.apiary.io/)
+- **MCP Protocol**: [MCP Documentation](https://modelcontextprotocol.io/)
 
-### v1.0.0
-- Initial release
-- Basic Everhour API integration
-- Support for projects, tasks, time records, timers, and clients
-- Comprehensive error handling and validation
-- Human-readable time format support
+## 🏆 Features
+
+- ✅ **Complete API Coverage** - All 37 Everhour endpoints
+- ✅ **Type Safety** - Full TypeScript implementation
+- ✅ **Input Validation** - Comprehensive validation with Zod
+- ✅ **Error Handling** - Graceful error handling
+- ✅ **Human-Readable** - Time formats and clear responses
+- ✅ **Well-Documented** - Extensive documentation and examples
+- ✅ **Production-Ready** - Robust and reliable implementation
+
+---
+
+Made with ❤️ for the Model Context Protocol community

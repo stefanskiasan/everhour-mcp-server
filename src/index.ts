@@ -1,4 +1,14 @@
 #!/usr/bin/env node
+/**
+ * Everhour MCP Server
+ * Complete Everhour API integration for Model Context Protocol
+ * 
+ * Usage: npx @everhour/mcp-server
+ * 
+ * Environment Variables:
+ * - EVERHOUR_API_KEY (required): Your Everhour API key
+ * - EVERHOUR_API_BASE_URL (optional): API base URL (default: https://api.everhour.com)
+ */
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {

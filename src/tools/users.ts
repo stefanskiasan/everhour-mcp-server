@@ -90,7 +90,7 @@ export const userTools: MCPTools = {
       const params = ListUsersSchema.parse(args);
       
       try {
-        const users = await client.getUsers(params);
+        const users = await client.getUsers();
         
         return {
           content: [

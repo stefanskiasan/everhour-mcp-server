@@ -285,10 +285,8 @@ export class EverHourApiClient {
   }
 
   // Users
-  async getUsers(params?: ListParams): Promise<EverHourUser[]> {
-    const response: AxiosResponse<EverHourUser[]> = await this.client.get('/team/users', {
-      params,
-    });
+  async getUsers(): Promise<EverHourUser[]> {
+    const response: AxiosResponse<EverHourUser[]> = await this.client.get('/team/users');
     return response.data;
   }
 

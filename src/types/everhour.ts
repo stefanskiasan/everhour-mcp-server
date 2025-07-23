@@ -65,24 +65,57 @@ export interface EverHourTask {
 }
 
 export interface EverHourTimeRecord {
-  id: string;
+  id: number;
   comment?: string;
   time: number; // in seconds
   date: string; // YYYY-MM-DD
+  user: number; // user ID
   task?: {
     id: string;
     name: string;
+    type?: 'task' | 'bug' | 'feature';
+    status?: 'open' | 'closed' | 'in_progress' | 'completed';
+    url?: string;
+    iteration?: string;
+    projects?: string[];
+    createdAt?: string;
+    dueOn?: string;
+    labels?: string[];
+    time?: {
+      total: number;
+      users: Record<string, number>;
+      timerTime: number;
+    };
+    attributes?: Record<string, any>;
+    completed?: boolean;
+    completedAt?: string;
+    assignees?: Array<{
+      accountId: string;
+      accountName: string;
+      userId: number;
+    }>;
   };
   project?: {
     id: string;
     name: string;
   };
-  user: {
+  history?: Array<{
     id: number;
-    name: string;
-  };
+    createdAt: string;
+    time: number;
+    action: 'ADD' | 'EDIT' | 'DELETE';
+    previousTime: number;
+    previousDate?: string;
+    previousTask?: string;
+    createdBy: number;
+    warning?: string;
+  }>;
+  lockReasons?: string[];
+  isLocked?: boolean;
+  cost?: number; // cost in cents
+  costRate?: number; // hourly rate in cents
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 export interface EverHourTimer {

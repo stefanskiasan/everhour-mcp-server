@@ -57,6 +57,25 @@ const DeleteTaskTimeSchema = z.object({
   id: z.string(),
 });
 
+// Helper function to format time record output with all fields
+const formatTimeRecord = (record: EverHourTimeRecord, client: EverHourApiClient) => ({
+  id: record.id,
+  comment: record.comment,
+  time: record.time,
+  timeFormatted: client.formatTime(record.time),
+  date: record.date,
+  user: record.user,
+  task: record.task,
+  project: record.project,
+  history: record.history,
+  lockReasons: record.lockReasons,
+  isLocked: record.isLocked,
+  cost: record.cost,
+  costRate: record.costRate,
+  createdAt: record.createdAt,
+  updatedAt: record.updatedAt,
+});
+
 export const taskExtensionTools: MCPTools = {
   everhour_get_tasks_for_project: {
     name: 'everhour_get_tasks_for_project',
@@ -298,17 +317,7 @@ export const taskExtensionTools: MCPTools = {
               type: 'text',
               text: JSON.stringify({
                 success: true,
-                timeRecord: {
-                  id: timeRecord.id,
-                  comment: timeRecord.comment,
-                  time: timeRecord.time,
-                  timeFormatted: client.formatTime(timeRecord.time),
-                  date: timeRecord.date,
-                  task: timeRecord.task,
-                  project: timeRecord.project,
-                  user: timeRecord.user,
-                  createdAt: timeRecord.createdAt,
-                },
+                timeRecord: formatTimeRecord(timeRecord, client),
                 message: `Time added to task: ${client.formatTime(timeRecord.time)} on ${timeRecord.date}`,
               }, null, 2),
             },
@@ -378,17 +387,7 @@ export const taskExtensionTools: MCPTools = {
               type: 'text',
               text: JSON.stringify({
                 success: true,
-                timeRecord: {
-                  id: timeRecord.id,
-                  comment: timeRecord.comment,
-                  time: timeRecord.time,
-                  timeFormatted: client.formatTime(timeRecord.time),
-                  date: timeRecord.date,
-                  task: timeRecord.task,
-                  project: timeRecord.project,
-                  user: timeRecord.user,
-                  updatedAt: timeRecord.updatedAt,
-                },
+                timeRecord: formatTimeRecord(timeRecord, client),
                 message: `Task time updated: ${client.formatTime(timeRecord.time)} on ${timeRecord.date}`,
               }, null, 2),
             },

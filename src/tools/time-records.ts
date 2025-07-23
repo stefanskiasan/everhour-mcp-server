@@ -60,6 +60,25 @@ const DeleteTimeRecordSchema = z.object({
   id: z.number(),
 });
 
+// Helper function to format time record output with all fields
+const formatTimeRecord = (record: EverHourTimeRecord, client: EverHourApiClient) => ({
+  id: record.id,
+  comment: record.comment,
+  time: record.time,
+  timeFormatted: client.formatTime(record.time),
+  date: record.date,
+  user: record.user,
+  task: record.task,
+  project: record.project,
+  history: record.history,
+  lockReasons: record.lockReasons,
+  isLocked: record.isLocked,
+  cost: record.cost,
+  costRate: record.costRate,
+  createdAt: record.createdAt,
+  updatedAt: record.updatedAt,
+});
+
 export const timeRecordTools: MCPTools = {
   everhour_list_time_records: {
     name: 'everhour_list_time_records',
@@ -107,18 +126,7 @@ export const timeRecordTools: MCPTools = {
             {
               type: 'text',
               text: JSON.stringify({
-                timeRecords: timeRecords.map(record => ({
-                  id: record.id,
-                  comment: record.comment,
-                  time: record.time,
-                  timeFormatted: client.formatTime(record.time),
-                  date: record.date,
-                  task: record.task,
-                  project: record.project,
-                  user: record.user,
-                  createdAt: record.createdAt,
-                  updatedAt: record.updatedAt,
-                })),
+                timeRecords: timeRecords.map(record => formatTimeRecord(record, client)),
                 total: timeRecords.length,
                 totalTime: timeRecords.reduce((sum, record) => sum + record.time, 0),
                 totalTimeFormatted: client.formatTime(timeRecords.reduce((sum, record) => sum + record.time, 0)),
@@ -167,18 +175,7 @@ export const timeRecordTools: MCPTools = {
             {
               type: 'text',
               text: JSON.stringify({
-                timeRecord: {
-                  id: timeRecord.id,
-                  comment: timeRecord.comment,
-                  time: timeRecord.time,
-                  timeFormatted: client.formatTime(timeRecord.time),
-                  date: timeRecord.date,
-                  task: timeRecord.task,
-                  project: timeRecord.project,
-                  user: timeRecord.user,
-                  createdAt: timeRecord.createdAt,
-                  updatedAt: timeRecord.updatedAt,
-                },
+                timeRecord: formatTimeRecord(timeRecord, client),
               }, null, 2),
             },
           ],
@@ -251,17 +248,7 @@ export const timeRecordTools: MCPTools = {
               type: 'text',
               text: JSON.stringify({
                 success: true,
-                timeRecord: {
-                  id: timeRecord.id,
-                  comment: timeRecord.comment,
-                  time: timeRecord.time,
-                  timeFormatted: client.formatTime(timeRecord.time),
-                  date: timeRecord.date,
-                  task: timeRecord.task,
-                  project: timeRecord.project,
-                  user: timeRecord.user,
-                  createdAt: timeRecord.createdAt,
-                },
+                timeRecord: formatTimeRecord(timeRecord, client),
                 message: `Time record created successfully: ${client.formatTime(timeRecord.time)} on ${timeRecord.date}`,
               }, null, 2),
             },
@@ -339,17 +326,7 @@ export const timeRecordTools: MCPTools = {
               type: 'text',
               text: JSON.stringify({
                 success: true,
-                timeRecord: {
-                  id: timeRecord.id,
-                  comment: timeRecord.comment,
-                  time: timeRecord.time,
-                  timeFormatted: client.formatTime(timeRecord.time),
-                  date: timeRecord.date,
-                  task: timeRecord.task,
-                  project: timeRecord.project,
-                  user: timeRecord.user,
-                  updatedAt: timeRecord.updatedAt,
-                },
+                timeRecord: formatTimeRecord(timeRecord, client),
                 message: `Time record updated successfully: ${client.formatTime(timeRecord.time)} on ${timeRecord.date}`,
               }, null, 2),
             },
@@ -464,18 +441,7 @@ export const timeRecordTools: MCPTools = {
             {
               type: 'text',
               text: JSON.stringify({
-                timeRecords: timeRecords.map(record => ({
-                  id: record.id,
-                  comment: record.comment,
-                  time: record.time,
-                  timeFormatted: client.formatTime(record.time),
-                  date: record.date,
-                  task: record.task,
-                  project: record.project,
-                  user: record.user,
-                  createdAt: record.createdAt,
-                  updatedAt: record.updatedAt,
-                })),
+                timeRecords: timeRecords.map(record => formatTimeRecord(record, client)),
                 total: timeRecords.length,
                 totalTime: timeRecords.reduce((sum, record) => sum + record.time, 0),
                 totalTimeFormatted: client.formatTime(timeRecords.reduce((sum, record) => sum + record.time, 0)),

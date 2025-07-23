@@ -15,24 +15,56 @@ export interface EverHourClient {
 export interface EverHourProject {
   id: string;
   name: string;
-  client?: {
+  platform?: string;
+  createdAt: string;
+  updatedAt?: string;
+  workspaceId?: string;
+  workspaceName?: string;
+  hasWebhook?: boolean;
+  status: 'active' | 'archived' | 'completed' | 'open';
+  type?: 'board' | 'list';
+  estimatesType?: 'any' | 'strict' | 'none';
+  canSyncTasks?: boolean;
+  users?: number[];
+  attributes?: Record<string, any>;
+  client?: number | {
     id: number;
     name: string;
   };
-  status: 'active' | 'archived' | 'completed';
-  type: 'board' | 'list';
   billing?: {
-    type: 'flat_rate' | 'hourly_rate' | 'none';
+    type: 'flat_rate' | 'hourly_rate' | 'hourly' | 'none';
     budget?: number;
     rate?: number;
+  };
+  budget?: {
+    excludeUnbillableTime: boolean;
+    excludeExpenses: boolean;
+    period: 'general' | 'daily' | 'weekly' | 'monthly';
+    type: 'time' | 'money';
+    budget: number;
+    disallowOverbudget: boolean;
+    showToUsers: boolean;
+    progress: number;
+    timeProgress: number;
+    expenseProgress: number;
+  };
+  rate?: {
+    type: 'project_rate' | 'user_rate' | 'flat_rate';
+    rate: number;
   };
   time?: {
     total: number;
     today: number;
     week: number;
   };
-  createdAt: string;
-  updatedAt: string;
+  isTemplate?: boolean;
+  privacy?: 'private' | 'public';
+  connectionStatus?: 'auto' | 'manual' | 'disabled';
+  icon?: Record<string, any>;
+  color?: Record<string, any>;
+  viewSettings?: Record<string, any>;
+  foreign?: boolean;
+  favorite?: boolean;
 }
 
 export interface EverHourTask {

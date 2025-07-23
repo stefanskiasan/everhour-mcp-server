@@ -47,6 +47,37 @@ const DeleteProjectSchema = z.object({
   id: z.string(),
 });
 
+// Helper function to format project output with all fields
+const formatProject = (project: EverHourProject) => ({
+  id: project.id,
+  name: project.name,
+  platform: project.platform,
+  createdAt: project.createdAt,
+  updatedAt: project.updatedAt,
+  workspaceId: project.workspaceId,
+  workspaceName: project.workspaceName,
+  hasWebhook: project.hasWebhook,
+  status: project.status,
+  type: project.type,
+  estimatesType: project.estimatesType,
+  canSyncTasks: project.canSyncTasks,
+  users: project.users,
+  attributes: project.attributes,
+  client: project.client,
+  billing: project.billing,
+  budget: project.budget,
+  rate: project.rate,
+  time: project.time,
+  isTemplate: project.isTemplate,
+  privacy: project.privacy,
+  connectionStatus: project.connectionStatus,
+  icon: project.icon,
+  color: project.color,
+  viewSettings: project.viewSettings,
+  foreign: project.foreign,
+  favorite: project.favorite,
+});
+
 export const projectTools: MCPTools = {
   everhour_list_projects: {
     name: 'everhour_list_projects',

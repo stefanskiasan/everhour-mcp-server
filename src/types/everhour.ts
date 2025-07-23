@@ -109,12 +109,61 @@ export interface EverHourUser {
   id: number;
   name: string;
   email: string;
+  headline?: string;
   role: 'admin' | 'manager' | 'member';
   status: 'active' | 'pending' | 'suspended';
+  type?: 'employee' | 'contractor';
   avatarUrl?: string;
+  avatarUrlLarge?: string;
   timezone?: string;
+  rate?: number; // hourly rate in cents
+  capacity?: number; // weekly capacity in seconds
+  isEmailVerified?: boolean;
+  enableResourcePlanner?: boolean;
+  favorite?: boolean;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
+  cost?: number; // total cost in cents
+  costHistory?: Array<{
+    id: number;
+    cost: number;
+    createdAt: string;
+  }>;
+  resourcePlannerAccess?: {
+    viewMine: boolean;
+    editMine: boolean;
+    viewAll: boolean;
+    editAll: boolean;
+  };
+  timeTrackingPolicy?: {
+    allowTimeWithoutTask: boolean;
+    allowManualTimeInput: boolean;
+    allowFutureTime: boolean;
+    allowCompletedTaskTime: boolean;
+    allowTimeWithoutEstimate: boolean;
+    allowExceedEstimate: boolean;
+    allowManageEstimates: boolean;
+    lockTimeAfter: number;
+    lockTimePeriod: 'days' | 'weeks' | 'months';
+  };
+  groups?: Array<{
+    id: number;
+    name: string;
+  }>;
+  budget?: {
+    excludeUnbillableTime: boolean;
+    excludeExpenses: boolean;
+    period: 'daily' | 'weekly' | 'monthly';
+    type: 'time' | 'money';
+    budget: number;
+    disallowOverbudget: boolean;
+    showToUsers: boolean;
+    thresholdNotificationUsers: number[];
+    progress: number;
+    timeProgress: number;
+    expenseProgress: number;
+  };
+  permissions?: Record<string, any>;
 }
 
 export interface EverHourSection {

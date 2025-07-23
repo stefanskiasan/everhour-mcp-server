@@ -6,12 +6,8 @@ import {
   MCPTools 
 } from '../types/everhour.js';
 
-// Zod schemas for input validation
-const ListUsersSchema = z.object({
-  page: z.number().optional(),
-  limit: z.number().optional(),
-  query: z.string().optional(),
-});
+// Zod schemas for input validation - /team/users doesn't support pagination
+const ListUsersSchema = z.object({});
 
 
 export const userTools: MCPTools = {
@@ -65,26 +61,13 @@ export const userTools: MCPTools = {
 
   everhour_list_team_users: {
     name: 'everhour_list_team_users',
-    description: 'List all team users using the /users endpoint. Supports pagination and search query.',
+    description: 'List all team users using the /team/users endpoint. Returns all users without pagination.',
     readonly: true,
     operationType: 'read',
     affectedResources: ['users'],
     inputSchema: {
       type: 'object',
-      properties: {
-        page: {
-          type: 'number',
-          description: 'Page number for pagination (default: 1)',
-        },
-        limit: {
-          type: 'number',
-          description: 'Number of users per page (default: 100)',
-        },
-        query: {
-          type: 'string',
-          description: 'Search query to filter users by name or email',
-        },
-      },
+      properties: {},
     },
     handler: async (client: EverHourApiClient, args: any) => {
       const params = ListUsersSchema.parse(args);

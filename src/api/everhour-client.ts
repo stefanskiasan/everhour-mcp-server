@@ -285,8 +285,18 @@ export class EverHourApiClient {
   }
 
   // Users
-  async getUsers(): Promise<EverHourUser[]> {
-    const response: AxiosResponse<EverHourUser[]> = await this.client.get('/team/users');
+  async getUsers(params?: {
+    props?: string[]; // Specific properties to return
+  }): Promise<EverHourUser[]> {
+    const queryParams: Record<string, any> = {};
+    
+    if (params?.props && params.props.length > 0) {
+      queryParams.props = params.props.join(',');
+    }
+    
+    const response: AxiosResponse<EverHourUser[]> = await this.client.get('/team/users', {
+      params: queryParams,
+    });
     return response.data;
   }
 
